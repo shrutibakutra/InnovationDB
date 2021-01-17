@@ -1,0 +1,384 @@
+.result-hd-box{
+    width: 100%;
+    display: inline-block;
+    text-align: center;
+    margin-bottom: 20px;
+}
+.result-hd-box .result-heading{
+    background: transparent;
+    color: #000;
+    padding: 0px 27px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 22px;
+}
+
+.opendelete-btns{
+   width: 100%;
+   margin:auto;
+   display:table;
+   margin-bottom:16px;
+}
+.opendelete-btns button{
+   background:#b08bf8;
+    color: #fff;
+    padding:6px 20px;
+    border-radius: 20px;
+    border:2px solid #b08bf8;
+    outline:none;
+    margin-right:5px;
+}
+.opendelete-btns img{
+    width: 24px;
+    float: right;
+    margin-top: 6px;
+   
+}
+.resultFunction table{
+    width:600px;
+}
+.resultFunction table td,
+.resultFunction table th{
+   text-align:center;
+   border:1px solid #ccc;
+   padding:7px 5px;
+   font-size: 14px;
+   line-break: anywhere;
+
+}
+
+.resultFunction table td{
+   font-size: 14px;
+   color:#303030;
+}
+
+.dropdown {
+    position: relative;
+    float: right;
+    height: 38px;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f1f1f1;
+    min-width: 160px;
+    box-shadow: 0px 3px 11px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    top: 38px;
+    left: -10px;
+}
+
+.dropdown-content button {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    background: none;
+    border: 0;
+    width: 100%;
+    text-align: left;
+    border-radius: 0;
+    cursor: pointer;
+}
+.dropdown-content button:hover {
+    background-color: #ddd;
+}
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+.text-left{
+    text-align: left !important;   
+}
+.btn-group{
+    width: 100%;
+}
+.row{
+    display: flex;
+}
+
+.col-9{
+    max-width: 100%;
+    flex: 0 0 100%; 
+}
+.col-3{
+    max-width: 100%;
+    flex: 0 0 100%; 
+}
+.gutter_space{
+    padding: 10px;
+}
+.main_wrapper{
+    display: block;
+    list-style: none;
+}
+.accordion{
+    background: none;
+    border: 0;
+    display: flex;
+    align-items: center ;
+    margin-bottom: 10px;
+    cursor: pointer;
+    width: 100%;
+}
+.accordion .folder-icon{
+    width: 24px;
+    margin: 0 10px;
+}
+.folder{
+    padding: 10px 0 0;
+    margin: 0 ;
+}
+.folder .folder{
+    padding: 0 0 0 30px;
+}
+.folder .plus-ic{
+    position: relative;
+    width: 20px;
+    height: 20px;
+}
+.folder .plus-ic:before,
+.folder .plus-ic:after{
+    content: "";
+    position: absolute;
+    background-color: #393939;
+    transition: transform 0.25s ease-out;
+}
+/* Vertical line */
+.folder .plus-ic:before{
+    top: 0;
+    left: 55%;
+    width: 2px;
+    height: 100%;
+    margin-left: -2px;
+}
+
+/* horizontal line */
+.folder .plus-ic:after{
+    top: 53%;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    margin-top: -2px;
+}
+
+.folder .plus-ic:hover:before , .folder .plus-ic.active:hover:before{ transform: rotate(90deg); }
+.folder .plus-ic:hover:after , .folder .plus-ic.active:hover:after { transform: rotate(180deg); }
+.border{
+    border: 1px solid #ccc;
+}
+.folder-title{
+    padding: 5px;
+    text-align: center;
+    margin: 0;
+}
+table td{
+    line-break: anywhere;
+}
+.dataTables_length select{
+    margin: 0 10px 10px;
+}
+
+.category-slider {
+    width: 300px;
+    display: inline-block;
+    margin: 0px 32px 20px;
+    max-width: 100%;
+}
+.category-slider-title {font-size: 18px;font-weight: 600;margin-left: 8px;}
+.category-slider-label {font-size: 18px;margin-left: 8px;font-weight: 400;}
+.category-slide > div  {margin-bottom: 10px;}
+.slider-link {color: #000;}
+.dataTables_wrapper .dataTables_paginate .paginate_button {color: #353434 !important;}
+.dataTables_wrapper .dataTables_paginate .paginate_button:active {box-shadow: none !important;color: #353434 !important;}
+.category-slide .paginate_button {
+    width: 25px;
+    height: 25px;
+    min-width: 25px !important;
+    border-radius: 50% !important;
+    padding: 0 !important;
+    color: #353434 !important;
+    border: 0 !important;
+    background: #d7d3d3 !important;
+}
+.dataTables_wrapper .dataTables_paginate .paginate_button.current, .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {color: #000 !important;font-weight: bold !important;}
+.category-slide .dataTables_wrapper .dataTables_paginate .paginate_button:hover {color: #353434 !important;}
+.category-slide table.dataTable tbody td {padding-right: 0;}
+.category-slide table.dataTable.display tbody td {border-top: 0;}
+.category-slide table.dataTable thead th {border-bottom: 0;text-align: left;padding-left: 10px;background-color: #fff;padding-right: 0;}
+.category-slide table.dataTable.stripe tbody tr.odd,.category-slide table.dataTable.display tbody tr.odd,.category-slide table.dataTable.hover tbody tr:hover,.category-slide table.dataTable.display tbody tr:hover,.category-slide table.dataTable tbody tr {
+    background-color: #e5e5e5 !important;
+}
+.category-slide .dataTables_paginate {
+    display: block;
+    float: none !important;
+    background-color: #d7d3d3;
+    padding: 10px !important;
+    text-align: center !important;
+}
+
+/*#tooltip {
+    border: 2px solid red;
+    display: none;
+    width:300px;
+}*/
+
+/* The Magic */
+
+.modal-popup {
+    height: 100%;
+    overflow: hidden;
+    transition: height .25s;
+    padding: 0 25px;
+    background-color: rgba(0,0,0,.6);
+    position: fixed;
+    width: 85%;
+    top: 0;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+}
+
+.modal-popup-content {
+  position: absolute;
+  display: block;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  width: 1200px;
+  max-width: 100%;
+  height: 500px;
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: #fff;
+}
+/*.modal-popup-content div {
+  height: 480px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  margin: 10px;
+  display: block;
+}
+.modal-popup-content iframe {width: 100%;height: 100%;display: block;margin: 0;padding: 0;border: 0;}
+*/
+/*tab content*/
+.tabs-wrapper {
+  margin: 0 14px;
+}
+.tab-body-wrapper {
+  background: #fff;
+  border: 3px solid #c3c3c3;
+}
+ul.tabs{
+	margin: 0px;
+	padding: 0px;
+	list-style: none;
+}
+		ul.tabs li{
+			background: #fff;
+			color: #000;
+			display: inline-block;
+			padding: 10px 15px;
+			cursor: pointer;
+			font-size: 18px;
+			font-weight: bold;
+			text-transform: uppercase;
+			border: 3px solid #c3c3c3;
+			margin: 0 -6px -2px 0;
+		}
+
+		ul.tabs li.current{
+			background: #e4e4e4;
+			color: #000;
+		}
+
+		.tab-content{
+			display: none;
+			background: #fff;
+			padding: 15px;
+		}
+
+		.tab-content.current{
+			display: inherit;
+		}
+@media screen and (max-width: 600px) {
+  .tabs-wrapper {
+    margin: 0;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  /* .accordion1:hover .accordion-item-content {width: 80%;} */
+  .modal-popup-content {width: 650px;}
+}
+
+@media screen and (max-width: 471px) {
+  .modal-popup-content {width: 300px;}
+}
+.ui-dialog-titlebar {display:none;}
+/* The Magic */
+.dataTables_filter {margin-bottom: 20px}
+.accordion1:hover .accordion-item:hover .accordion-item-content ,
+.accordion1 .accordion-item--default .accordion-item-content {
+  height:300px;
+}
+.accordion-item-content,
+.accordion1:hover .accordion-item-content {
+    height: 0;
+    overflow: hidden;
+    transition: height .25s;
+    padding: 0 25px;
+    position: fixed;
+    width: 300px;
+    box-shadow: 0 1px 5px rgba(0,0,0,.4);
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin:auto;
+}
+
+.accordion-popup {
+  position: absolute;
+  display: block;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  width:100%;
+  max-width: 100%;
+  height: 300px;
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: #fff;
+}
+.accordion-item {
+    width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.accordion-popup div {
+  height: 290px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  margin: 10px;
+  display: block;
+  white-space: normal;
+  word-break: break-word;
+}
+.accordion1 {padding: 0;margin: 0 auto;cursor: pointer;}
+@media screen and (max-width: 768px) {
+  /* .accordion1:hover .accordion-item-content {width: 80%;} */
+  .accordion-popup {width: 650px;}
+}
+@media screen and (max-width: 767px) {
+  .accordion1:hover .accordion-item:hover .accordion-item-content ,
+  .accordion-item-content,.accordion1:hover .accordion-item-content {padding: 0 20px;margin-bottom: 20px;margin-top: 10px;}
+}
+@media screen and (max-width: 471px) {
+  .accordion-popup {width: 300px;}
+}

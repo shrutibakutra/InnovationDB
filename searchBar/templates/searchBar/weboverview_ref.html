@@ -1,0 +1,478 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block custom_css %}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
+<link rel="stylesheet" type="text/css" href="{% static 'results_style.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'colorbox.css' %}">
+
+
+{% endblock %}
+
+{% block custom_js %}
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+<script src="{% static 'jquery.colorbox.js' %}"></script>
+
+{% endblock %}
+{% block content %}
+
+    <div class="resultFunction">
+      <div class="result-hd-box">
+        <label id="savedDataLbl" class="result-heading">Overview of {{ keywordSearch.keyWord }} results</label>
+    </div>
+    </div>
+    <div class="row {{keywordSearch.filter}}">
+      <div class="resultFunction col-9">
+        <div class="gutter_space">
+          <div class="opendelete-btns btn-group">
+            <button  style="cursor:pointer" class="delete-btn openLink" id="open">OPEN</button>
+            <button  style="cursor:pointer" class="open-btn" id="exportCSV"  >EXPORT CSV</button>
+<!--            <button style="cursor:pointer" class="open-btn downloadLocally" id="downloadLocally">DOWNLOAD LOCALLY</button>-->
+<!--            <button  style="cursor:pointer; color: lightgray;" class="delete-btn" id="downloadServer_stop">DOWNLOAD ON SERVER</button>-->
+            
+          <div class="dropdown" style="cursor:pointer;margin-right:10px;">
+            
+            <img class="filt-btn" src="/static/filter.svg" alt="filter">
+
+              <div class="dropdown-content">
+                  <button class="url_extension" view="all">All</button>
+                  {% for extension in url_extension %}
+                  <button class="url_extension" view="{{extension}}">{{extension}}</button>
+                  {% endfor %}
+                  <button class="url_extension" view="COMPANIES-STARTUPS">COMPANIES / STARTUPS</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    {% csrf_token %}
+    <input type="hidden" id="innovationId"  name="innovation_id" value="{{ keywordSearch.id }}"> 
+    </div>
+
+    <div class="tabs-wrapper">
+        <ul class="tabs">
+            {% for type in types_of_text %}
+                {% if select_type == type %}
+                    <li class="tab-link current" data-tab="{{type}}"><a href="{{i.url}}/search/searchListType/{{ keywordSearch.id }}/{{type}}">{{type}}</a> </li>
+                    <input type="hidden" id="hide" value="{{type}}">
+                {% else %}
+                <li class="tab-link" data-tab="{{type}}"><a href="{{i.url}}/search/searchListType/{{ keywordSearch.id }}/{{type}}">{{type}}</a> </li>
+                {% endif %}
+             {% endfor %}
+	    </ul>
+
+        <div class="tab-body-wrapper">
+            <div id="tab-1" class="tab-content current">
+                 <div style="width: 100%;margin: auto;display: flex;flex-wrap: wrap;">
+                    {% for key, value in finalResult.items %}
+                        {% if value %}
+                            <div class="category-slider {{key}}">
+                                <div class="slider-content">
+                                    <div>
+                                        <div class="category-slide">
+                                            <table id="examples" class="example display" style="width:100%">
+                                                 <thead class="hidden">
+                                                    <tr data-id="check_all" data-key="{{key}}" keyword-id = "{% with value|first as first_doc %}{{ first_doc.keywordId_id }}{% endwith %}">
+                                                    
+                                                <th> <input type="checkbox" class="anchor-from" id="anchor-from" data-key="{{key}}" value = "not_selected"  style="margin-right: 0 !important; cursor: pointer "/> </th>
+                                                <th class="hidden">id</th>
+                                                 <th class="category-slider-title">{{key}}</th>
+                                                    </tr>
+                                                </thead >
+                                                <tbody >
+                                                  {% for i in value %}
+                                                    <tr name="Others" data-key="{{key}}" data-id="{{ i.id }}" keyword-id = "{{i.keywordId_id}}" data-url="{{i.url}}">
+                                                        <td><input type="checkbox" class="checkall_{{key}}" data-key="{{key}}"  id="checkbox-from" style="margin-right: 0 !important; cursor: pointer"></td>
+                                                        <td id="tdNamse">{{i.id}}</td>
+                                                        <td id="tdNames" name="user_names">
+                                                            <a href="{{i.url}}" target="_blank" data-id="{{ i.id }}" class="iframe slider-link"  id="open123">{{i.title|truncatechars:25}}</a>
+                                                            <lable style="padding-left: 0px;">{% if desc_is_null == False %}: {{i.matched_similarity}}% {% endif %}</lable>
+                                                            <div id="dialog_content_{{ i.id }}" class="dialog_content" data-id="{{ i.id }}"> <iframe class="tooltip" id="tooltip_{{i.id}}" src="" style="display:none;"></iframe></div>
+<!--                                                            <iframe class="tooltip" id="tooltip_{{i.id}}" src="" style="display:none;"></iframe>-->
+                                                        </td>
+                                                    </tr>
+                                                  {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                    {% endfor %}
+                     <!--Static Dive For Company /Startup-->
+                    {% for type in types_of_text %}
+                     {% if type == "BUSINESS" %}
+                     {% if select_type == "BUSINESS" %}
+                     <div class="category-slider COMPANIES-STARTUPS">
+                        <div class="slider-content">
+                            <div>
+                                <div class="category-slide">
+                                    <table id="example" class="example display" style="width:100%">
+                                         <thead class="hidden">
+                                        <tr>
+                                        <th> <input type="checkbox" class="anchor-from"  id="anchor-from" value = "not_selected" data-key="COMPANIES_and_STARTUPS"   style="margin-right: 0 !important; cursor: pointer "/> </th>
+                                        <th class="hidden">id</th>
+                                         <th class="category-slider-title">COMPANIES / STARTUPS</th>
+                                            </tr>
+                                        </thead id="result" >
+                                        <tbody >
+                                            {% for company_detail in company_details %}
+                                            <tr  name="Company-Startup" data-id="{{ company_detail.searchResultId_id }}" data-url="{{company_detail.company_url}}" >
+                                                <td><input type="checkbox" data-url="{{company_detail.company_url}}"   id="checkbox-from" class="checkall_COMPANIES_and_STARTUPS" data-key="COMPANIES_and_STARTUPS"  style="margin-right: 0 !important; cursor: pointer"></td>
+                                                <td id="tdNamses">{{company_detail.id}}</td>
+                                                <td id="tdNamess" name="user_names">
+                                                    <a href="{{company_detail.company_url}}" class="iframe slider-link"  target="_blank" data-id="{{ company_detail.searchResultId_id }}" style="color:black;">{{company_detail.company_name}}</a>
+                                                    <lable style="padding-left: 0px;">{% if desc_is_null == False %}: {{i.matched_similarity}}% {% endif %}</lable>
+                                                    <div id="dialog_content_{{ company_detail.searchResultId_id }}" class="dialog_content" data-id="{{ company_detail.searchResultId_id }}"> <iframe class="tooltip" id="tooltip_{{company_detail.searchResultId_id}}" src="" style="display:none;"></iframe></div>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                     {% endif %}
+                     {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+$(document).ready(function() {
+        $('.example').DataTable({
+            "pagingType": 'numbers',
+            "pageLength" : 10,
+            "ordering": false,
+            "searching": false,
+            "lengthChange": false,
+            "filter": true,
+            "info": false,
+            "autoWidth": false ,
+            "order": [[ 1, 'desc' ]],
+            "columnDefs": [{
+                "targets": [ 1 ],
+                "visible": false,
+                "searchable": false
+            },
+            {
+                "targets": [0], //first column / numbering column
+                "orderable": false, //set not orderable
+            }],drawCallback: function() {
+                $(".iframe").colorbox({iframe:true, width:"80%", height:"80%"});
+            }
+            
+        });
+        $(".iframe").colorbox({iframe:true, width:"80%", height:"80%"});
+    } );
+</script>
+<script>
+    $('#exportCSV').prop("disabled", true);
+        $('input:checkbox').click(function() {
+         if ($(this).is(':checked')) {
+         $('#exportCSV').prop("disabled", false);
+         } else {
+         if ($('.check_all').filter(':checked').length < 1){
+         $('#exportCSV').attr('disabled',true);}
+         }
+        });
+</script>
+<script>
+    $("#exportCSV").click(function(){
+      var id_with_type = []
+      var selected_rows=[];
+      var selected_Company_startup=[];
+   
+      $('.display').find('tr').each(function(){
+        var row=$(this);
+        //console.log(row.find('input[type="checkbox"]').is(':checked'));
+            if (row.find('input[type="checkbox"]').is(':checked')) {
+                var ids = row.attr('data-id');
+                var keyword_id = row.attr('keyword-id');
+                var data_key = row.attr('data-key');
+                var name = row.attr('name');
+                var type = row.attr('type');
+                var types_of_text = $('#hide').val();
+                if(ids == 'check_all'){
+                    data = {'type':data_key,'types_of_text':types_of_text, 'keyword_id': keyword_id}
+                
+                    id_with_type.push(data)
+                }
+                if(ids && name == "Others"){
+                selected_rows.push(ids);
+                }
+                else if(ids && name == "Company-Startup"){
+                    selected_Company_startup.push(ids);
+                }
+            }
+      });
+    //   console.log('rowddds',id_with_type) 
+      var selected_row = JSON.stringify(selected_rows)
+      var Company_startup = JSON.stringify(selected_Company_startup)
+      var all_check_ids = JSON.stringify(id_with_type)
+    //   console.log('row',selected_row)
+    //   console.log('rowsssss',Company_startup)
+      $.ajax({
+          url: "/search/ExportCsvView/",
+          type: 'POST',
+          data: {'search_id': selected_row,'company_startup_id': Company_startup, 'check_all_ids': all_check_ids , filename : '{{ keywordSearch.keyWord }}', 'csrfmiddlewaretoken': $("[name=csrfmiddlewaretoken]").val()},
+          success: function(data){
+            var fileName  = data.fileName
+            var encodedUri = "/" + data.filePath;
+            var link = document.createElement("a");
+            console.log('gsjd',link)
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", fileName);
+            document.body.appendChild(link);
+            link.click();
+          }
+      })
+    });
+</script>
+<!-- <script>
+    $("#exportCSV").click(function(){
+  
+      var selected_rows=[];
+      var selected_Company_startup=[];
+
+      $('.display').find('tr').each(function(){
+        var row=$(this);
+        //console.log(row.find('input[type="checkbox"]').is(':checked'));
+            if (row.find('input[type="checkbox"]').is(':checked')) {
+                var ids = row.attr('data-id');
+                var name = row.attr('name');
+                if(ids && name == "Others"){
+                selected_rows.push(ids);
+                }
+                else if(ids && name == "Company-Startup"){
+                selected_Company_startup.push(ids);
+                }
+            }
+      });
+      
+      var selected_row = JSON.stringify(selected_rows)
+      var Company_startup = JSON.stringify(selected_Company_startup)
+      console.log('row',selected_row)
+      console.log('rowsssss',Company_startup)
+      $.ajax({
+          url: "/search/ExportCsvView/",
+          type: 'POST',
+          data: {'search_id': selected_row,'company_startup_id': Company_startup, filename : '{{ keywordSearch.keyWord }}', 'csrfmiddlewaretoken': $("[name=csrfmiddlewaretoken]").val()},
+          success: function(data){
+            var fileName  = data.fileName
+            var encodedUri = "/" + data.filePath;
+            var link = document.createElement("a");
+            console.log('gsjd',link)
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", fileName);
+            document.body.appendChild(link);
+            link.click();
+          }
+      })
+    });
+</script> -->
+
+<script>
+  $("#downloadServer").click(function(){
+
+    var selected_rows=[];
+   
+
+      
+    $('.display').find('tr').each(function(){
+      var row=$(this);
+      if (row.find('input[type="checkbox"]').is(':checked')) {
+        var ids = row.attr('data-id')
+        if(ids){selected_rows.push(ids);}
+      }
+    });
+    
+    var selected_row = JSON.stringify(selected_rows)
+    $.ajax({
+        url: "/search/DownloadServerView/",
+        type: 'POST',
+        data: {'search_id': selected_row,'csrfmiddlewaretoken': $("[name=csrfmiddlewaretoken]").val()},
+        success: function(data){
+          var fileName  = data.fileName
+          var encodedUri = "/" + data.filePath;
+          var link = document.createElement("a");
+          link.setAttribute("href", encodedUri);
+          link.setAttribute("download", fileName);
+          document.body.appendChild(link);
+          link.click();
+        }
+    })
+  });
+</script>
+
+
+<script>
+    $(".openLink").click(function(){
+      var selected_rows=[];
+      var counter = 0
+           $('.display').find('tr').each(function(){
+            var row=$(this);
+            console.log(row.find('input[type="checkbox"]').is(':checked'));
+                if (row.find('input[type="checkbox"]').is(':checked')) {
+                    var ids = row.attr('data-id');
+                    console.log(ids)
+                    if (ids != "check_all"){
+                        counter = counter + 1
+                        if(ids && counter <= 10){
+                        var link = $(this).attr('data-url');
+                        window.open(
+                        link,
+                        '_blank' // <- This is what makes it open in a new window.
+                        );
+                    }
+                }
+            };
+        });
+    });
+    function getfilename(path){
+
+            path = path.substring(path.lastIndexOf("/")+ 1);
+            return (path.match(/[^.]+(\.[^?#]+)?/) || [])[0];
+
+    }
+  $(".downloadLocally").click(function(){
+    var selected_rows=[];
+
+    $('.display').find('tr').each(function(){
+        var row=$(this);
+        //console.log(row.find('input[type="checkbox"]').is(':checked'));
+            if (row.find('input[type="checkbox"]').is(':checked')) {
+                var ids = row.attr('data-id');
+                console.log(ids)
+                if(ids){
+            var linkUrls = $(this).attr('data-url');
+
+                var fileName = getfilename(linkUrls);
+
+            if(linkUrls && fileName.indexOf('.') !== -1){
+                $.ajax({
+                    url: "/search/DownloadFile/",
+                    type: 'POST',
+                    data: {'linkUrls': linkUrls,'fileName':fileName,'csrfmiddlewaretoken': $("[name=csrfmiddlewaretoken]").val()},
+                    success: function(data){
+                      var fileName  = data.fileName
+                      var encodedUri = "/" + data.filePath;
+                      var link = document.createElement("a");
+                      link.setAttribute("href", encodedUri);
+                      link.setAttribute("download", fileName);
+                      document.body.appendChild(link);
+                      link.click();
+                    }
+                })
+            }
+        }
+      }
+    });
+
+});
+</script>
+<script> 
+$(document).ready(function () {
+        $(".dataTables_paginate").click(function(){
+            Take_value = $('input[data-key = "COMMERCIAL"]').val()
+            
+            if(Take_value == 'not_selected'){
+                $(".checkall_COMMERCIAL").attr("disabled", false);
+                $(".checkall_COMMERCIAL").prop("checked", false);
+            }
+            else if($('input[data-key = "COMMERCIAL"]').is(':checked')){
+                $(".checkall_COMMERCIAL").attr("disabled", false);
+                $(".checkall_COMMERCIAL").prop("checked", true);
+            }
+            
+            // For COMPANIES_and_STARTUPS
+            Take_value = $('input[data-key = "COMPANIES_and_STARTUPS"]').val()
+            
+            if(Take_value == 'not_selected'){
+                $(".checkall_COMPANIES_and_STARTUPS").attr("disabled", false);
+                $(".checkall_COMPANIES_and_STARTUPS").prop("checked", false);
+            }
+            else if($('input[data-key = "COMPANIES_and_STARTUPS"]').is(':checked')){
+                $(".checkall_COMPANIES_and_STARTUPS").attr("disabled", false);
+                $(".checkall_COMPANIES_and_STARTUPS").prop("checked", true);
+            }
+
+            // For ORGANIZATION
+            Take_value = $('input[data-key = "ORGANIZATION"]').val()
+            if(Take_value == 'not_selected'){
+                $(".checkall_ORGANIZATION").attr("disabled", false);
+                $(".checkall_ORGANIZATION").prop("checked", false);
+            }
+            else if($('input[data-key = "ORGANIZATION"]').is(':checked')){
+                $(".checkall_ORGANIZATION").attr("disabled", false);
+                $(".checkall_ORGANIZATION").prop("checked", true);
+            }
+
+            // For OTHERS
+            Take_value = $('input[data-key = "OTHERS"]').val()
+            if(Take_value == 'not_selected'){
+                $(".checkall_OTHERS").attr("disabled", false);
+                $(".checkall_OTHERS").prop("checked", false);
+            }
+            else if($('input[data-key = "OTHERS"]').is(':checked')){
+                $(".checkall_OTHERS").attr("disabled", false);
+                $(".checkall_OTHERS").prop("checked", true);
+                console.log(Take_value);
+            }
+
+             // For EDUCATIONAL
+            Take_value = $('input[data-key = "EDUCATIONAL"]').val()
+            if(Take_value == 'not_selected'){
+                $(".checkall_EDUCATIONAL").attr("disabled", false);
+                $(".checkall_EDUCATIONAL").prop("checked", false);
+            }
+            else if($('input[data-key = "EDUCATIONAL"]').is(':checked')){
+                $(".checkall_EDUCATIONAL").attr("disabled", false);
+                $(".checkall_EDUCATIONAL").prop("checked", true);
+            
+            }
+    })
+});
+    
+    $(".anchor-from").change(function(){
+        var key = $(this).attr('data-key');
+        
+        Take_value = $('input[data-key ='+ key +']').val()
+            
+            if(Take_value == 'not_selected')
+                {
+                 $('input[data-key = ' + key +']').val('selected')
+                  $(".checkall_"+key).attr("disabled", false);
+                  $(".checkall_"+key).prop("checked", true);
+
+                }
+                else
+                {
+                $('input[data-key = ' + key +']').val('not_selected')   
+                $(".checkall_"+key).attr("disabled", false);
+                $(".checkall_"+key).prop("checked", false);
+                }
+            });
+    $(".checkall").change(function(){
+         $(".anchor-from").attr("disabled", false);
+         $(".anchor-from").prop("checked", false);
+    });
+    $(".url_extension").on("click", function(){
+        let exte = $(this).attr('view');
+        if(exte == "all"){
+            $(".category-slider").show();
+        }else{
+            $(".category-slider").hide();
+            $("."+exte).show();
+        }
+    });
+</script>
+
+
+{% endblock %}
+

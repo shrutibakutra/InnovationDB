@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% load static %}
+ {% block custom_css %}<link rel="stylesheet" type="text/css" href="{% static 'searchbar_stye.css' %}">{% endblock %}
+{% block content %}
+    <div class="searchFunction">
+        <form action="/searchResult/" method="post">
+            <input type="hidden" id = "csrf_token" name="csrfmiddlewaretoken" value="isXFHorKb7qAkgwb0sOG2c2oxsSFzJnHkup3TKIAxRIAFNPGJdmVgZh7XmVEORFD">
+            {% csrf_token %}
+            <label for="your_name" style="margin-right: 20px;">Innovation Search: </label>
+            <input height="500px" width="50%" id="search" type="text" name="Search_Anything" value="" placeholder="Search" style="
+            margin-right: 30px;">
+            <input height="500px" width="50%" role="spinbutton" aria-valuemax="100" aria-valuemin="0" aria-valuenow="25" type="number" value="80" style="
+            margin-right: 30px;">
+            {% comment %} <input type= "hidden" id = "csrf_token" name= "csrf_token" value = '{% csrf_token %}'> {% endcomment %}
+            
+            <button>Search</button>
+            
+            <button>Load</button>
+
+            <div class="checkboxFunction" >
+
+                <input type="checkbox" name="type1" value="Image">
+                <label for="type1"> Image</label>
+
+                <input type="checkbox" name="type2" value="Video" >
+                <label for="type2"> Video</label>
+
+                <input type="checkbox" name="type3" value="Document">
+                <label for="type3"> Document </label>
+
+                <input type="checkbox" name="type4" value="PDF">
+                <label for="type4"> PDF</label>
+ 
+            </div>
+            <div style="margin-top: 18px;">
+                 <textarea id= "display"></textarea>
+            </div>
+        </form>
+	</div>
+
+    <script>
+            $(document).ready(function() {
+                
+               //On pressing a key on "Search box" in "search.php" file. This function will be called.
+               $("#search").keyup(function() {
+                    $('#display').empty();
+                   //Assigning search box value to javascript variable named as "name".
+                   var name = $('#search').val();
+                   var csrf_tocken = $('#csrf_token').val();
+                   //Validating, if "name" is empty.
+                   if (name == "") {
+                       //Assigning empty value to "display" div in "search.php" file.
+                       $("#display").html("");
+                   }
+                   //If name is not empty.
+                   else {
+                       //AJAX is called.
+                       $.ajax({
+                           //AJAX type is "Post".
+                           type: "get",
+                           //Data will be sent to "ajax.php".
+                           url: "/result/",
+                           //Data, that will be sent to "ajax.php".
+                           data: {
+                               //Assigning value of "name" into "search" variable.
+                               search: name,
+                               csrfmiddlewaretoken: '{{ csrf_token }}'                               
+                           },
+
+                           //If result found, this funtion will be called.
+                           success: function(res) {
+
+                                res = JSON.parse(JSON.stringify(res));
+                               //Assigning result to "display" div
+                                var html_data = "";
+                                for (var i=0; i < res.models_to_return.length; i++) {
+                                    html_data +="Match: "+res.models_to_return[i].title+ "\n";
+                                }
+                               $("#display").html(html_data).show();
+                           }
+                       });
+                   }
+               });
+            });
+    </script>
+{% endblock %}                              

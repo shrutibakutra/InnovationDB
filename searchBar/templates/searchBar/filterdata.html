@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load result_filters %}
+{% block custom_css %}<link rel="stylesheet" type="text/css" href="{% static 'results_style.css' %}">{% endblock %}
+{% block content %}
+    <div class="resultFunction">
+        <div class="result-hd-box">
+            <label id="savedDataLbl" class="result-heading">RESULTS</label>
+        </div>
+        
+        
+         
+      </div>
+        <table class= "test-list", id="tdName", border="1" ,="" width="500", style="border-collapse: collapse;margin: auto;",>
+            <tbody >
+              <tr>
+                 <th> <input type="checkbox" id="anchor-from" name="anchor-from"/> </th>
+                 
+                 <th>SEARCH LIST</th>
+                 <th >STATUS</th>  
+               </tr>
+              {% for i in params %}
+                <tr data-id="{{ i.id }}">
+                 <td id="tdNames" name="user_names"><a href="{{i.url}}">{{i.keyWord}}</a></td>
+                 <td id="tdNamse">{{i.status}}</td>
+               </tr>
+              {% endfor %}
+
+            </tbody>
+        </table>
+        {% csrf_token %}
+	</div>
+{% endblock %}

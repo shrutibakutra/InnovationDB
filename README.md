@@ -1,1 +1,3 @@
 # InnovationDB
+
+In this project, Created APIs that can extract the most relevant links, along with the relevancy score displayed, from platforms like google and bing. This was created using the Django REST Framework. For example, when the user enters a certain keyword it gives all the results starting from most relevant to least relevant, and all the results that fall below a certain relevancy threshold were neglected. The scoring criteria for relevancy was determined using a ML algorithm.

@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block custom_css %}<link rel="stylesheet" type="text/css" href="{% static 'index_style.css' %}">{% endblock %}
+{% block content %}
+	<div class="availableFunctions">
+		
+	
+		<div class="functionBox">
+				<a href="{% url 'collector:add_innovation' %}">
+					<div class="functionCoverImage" style="background-image: url(../static/technology.jpg)">
+						<h3>CREATE/EDIT INNOVATIONS</h3>
+					</div>
+				</a>
+
+			<div class="functionDescription">
+
+				<p>Search for query related images, URLs and other types of data and add a new Innovation. Or import number of them as an Excel file and edit them.</p>
+
+			</div>
+
+		</div>
+
+		<div class="functionBox">
+			<a href="{% url 'scheduler:scheduler_action_choice' %}">
+				<div class="functionCoverImage" style="background-image: url(../static/209489-676x450-Grouping-Framed-Art.jpg)">
+					<h3>MANAGE INNOVATION PUBLISHING</h3>
+				</div>
+			</a>
+
+			<div class="functionDescription">
+				
+				<p>Group and schedule Innovations.</p>
+
+			</div>
+		</div>
+
+
+	</div>
+{% endblock %}
+{% block jquery %}
+	<script>
+		
+		$(document).ready(function(){
+
+            $('.functionCoverImage').hover(function(){
+            	$(this).children('h3').css('font-size', '23px');
+            	$(this).children('img').css('filter', 'blur(0px)');
+            }, 	function(){
+            	$(this).children('h3').css('font-size', '18px');
+            	$(this).children('img').css('filter', 'blur(3px)');
+            });
+
+		});
+
+	</script>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+ {% load static %}
+ {% block custom_css %}<link rel="stylesheet" type="text/css" href="{% static 'results_style.css' %}">{% endblock %}
+{% block content %}
+    <div class="resultFunction">
+        <div class="result-hd-box">
+            <label id="savedDataLbl" class="result-heading">RESULTS</label>
+        </div>
+        <div class="opendelete-btns">
+         <button type="button">OPEN</button>
+         <button type="button">DELETE</button>
+         <img src="/static/filter.svg" alt="filter">
+        </div>
+        <table border="1" ,="" width="500", style="border-collapse: collapse;margin: auto;",>
+            <tbody>
+              <tr>
+                 <th><input type="checkbox"></th>
+                 <th>SEARCH LIST</th>
+                 <th>STATUS</th>
+               </tr>
+              {% for i in params %}
+                <tr>
+                 <td><input type="checkbox"></td>
+                    <td><a href="{{i.url}}">{{i.title}}</a></td>
+                 <td></td>
+               </tr>
+              {% endfor %}
+
+            </tbody>
+        </table>
+
+	</div>
+
+<!--    <div class="pagination">-->
+<!--    <span class="step-links">-->
+<!--        {% if page_obj.has_previous %}-->
+<!--            <a href="?page=1">&laquo; first</a>-->
+<!--            <a href="?page={{ page_obj.previous_page_number }}">previous</a>-->
+<!--        {% endif %}-->
+
+<!--        <span class="current">-->
+<!--            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.-->
+<!--        </span>-->
+
+<!--        {% if page_obj.has_next %}-->
+<!--            <a href="?page={{ page_obj.next_page_number }}">next</a>-->
+<!--            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>-->
+<!--        {% endif %}-->
+<!--    </span>-->
+<!--</div>-->
+{% endblock %}

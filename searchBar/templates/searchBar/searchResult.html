@@ -1,0 +1,177 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load result_filters %}
+{% block custom_css %}
+<link rel="stylesheet" type="text/css" href="{% static 'results_style.css' %}">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
+{% endblock %}
+{% block custom_js %}
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+{% endblock %}
+{% block content %}
+    <div class="resultFunction" style="width: 600px;margin: 0 auto;">
+        <div class="result-hd-box">
+            <label id="savedDataLbl" class="result-heading">RESULTS</label>
+        </div>
+        <div class="opendelete-btns">
+         <button style= "cursor:pointer" class="open-btn" >OPEN</button>
+         <button style= "cursor:pointer" name="delete" class="delete-btn">DELETE</button>
+<!--         <form style="display: inline-block;" action="/search/searchResult/" method="post">{% csrf_token %}-->
+         <button style= "cursor:pointer; color: lightgray;" name="load" class="load-btn" >LOAD</button>
+<!--         </form>-->
+         
+        
+         <div class="dropdown" style= "cursor:pointer">
+          
+          <img class="filt-btn" src="/static/filter.svg" alt="filter">
+          
+          <div class="dropdown-content">
+            <form action="{% url 'searchResult' %}" method="get">
+              <button type="submit">All</button>
+            </form>
+            <form action="{% url 'searchResult' %}0" method="get">
+              <button type="submit">Pending</button>
+            </form><form action="{% url 'searchResult' %}1" method="get">
+              <button type="submit">Running</button>
+            </form><form action="{% url 'searchResult' %}2" method="get">
+              <button type="submit">Completed</button>
+            </form>
+          </div>
+        </div>
+        
+      </div>
+<!--        <table class= "test-list", id="tdName", border="1" ,="" width="500", style="border-collapse: collapse;margin: auto;",>-->
+            <table id="example" class="display" style="width:100%">
+                 <thead >
+                    <tr>
+                    <th style="width: 7%;"> <input type="checkbox" id="anchor-from" style="margin-right: 0 !important; cursor: pointer "/> </th>
+                    <th class="hidden">id</th>
+                     <th style="width: 20%;">SEARCH LIST</th>
+                     <th style="width: 19%;">REFERENCE TEXT</th>
+                    <th style="width: 16%;">TYPE OF SEARCH</th>
+                    <th style="width: 16%">STATUS</th>
+                    <th style="22%">DATE</th>
+                    </tr>
+                </thead >
+            <tbody >
+              {% for i in params %}
+                <tr data-id="{{ i.id }}">
+                 <td><input type="checkbox" class="checkall" id="check-box" style="margin-right: 0 !important; cursor: pointer"></td>
+                    <td id="tdNamse hidden">{{i.id}}</td>
+                 <td id="tdNames" name="user_names"><a href="{{i.url}}/search/searchListType/{{i.id}}/{{i.types_of_text}}" target="_blank" style="word-break: break-word !important;">{{i.keyWord}}</a></td>
+                    <td id="tdNamse">
+<!--                        {{i.description}}-->
+                        <div class="accordion1">
+                            <div class="accordion-item">
+                                <span>
+                                    {{i.description}}
+                                </span>
+                                <div class="accordion-item-content">
+                                    <div class="accordion-popup">
+                                        <div>{{i.description}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td id="tdNamse">{{i.filter}}</td>
+                    {% if i.status == "Pending" %}
+                    <td id="tdNamse">{{i.status}}</td>
+                    {% else %}
+                    <td id="tdNamse">{{i.status}} {{i.total_stored_result}} / {{i.total_crawled_result}}</td>
+                    {%endif%}
+                    <td id="tdNamse">{{i.created_at}}</td>
+               </tr>
+              {% endfor %}
+
+            </tbody>
+        </table>
+        {% csrf_token %}
+	</div>
+<script>
+    $(document).ready(function() {
+        $('#example').DataTable({
+            "lengthMenu": [[10, 25, 50, 100, 500, 1000, -1], [10, 25, 50, 100, 500, 1000, "All"]],
+            "order": [[ 1, 'desc' ]],
+            "columnDefs": [{
+                "targets": [ 1 ],
+                "visible": false,
+                "searchable": false
+            },
+            {
+                "targets": [0], //first column / numbering column
+                "orderable": false, //set not orderable
+            }]
+        });
+    } );
+</script>
+ <script>
+    $("#anchor-from").change(function(){
+
+                if($('#anchor-from').is(':checked'))
+                {
+                  $(".checkall").attr("disabled", false); 
+                  $(".checkall").prop("checked", true); 
+
+                }
+                else
+                {
+                $(".checkall").attr("disabled", false);
+                 $(".checkall").prop("checked", false); 
+                }
+            });
+    $(".checkall").change(function(){
+         $("#anchor-from").attr("disabled", false);
+         $("#anchor-from").prop("checked", false);
+    });
+</script>
+
+<script>
+        $(".open-btn").click(function(){
+          var selected_rows=[];
+
+          $('.display').find('tr').each(function(){
+            var row=$(this);
+            //console.log(row.find('input[type="checkbox"]').is(':checked'));
+                if (row.find('input[type="checkbox"]').is(':checked')) {
+                    var ids = row.attr('data-id')
+                    if(ids){
+                     window.open(
+                      '{{i.url}}/search/searchList/'+ids,
+                      '_blank' // <- This is what makes it open in a new window.
+                    );
+                }
+            };
+          });
+        });
+        $(".delete-btn").click(function(){
+
+          var selected_rows=[];
+
+          $('.display').find('tr').each(function(){
+            var row=$(this);
+            //console.log(row.find('input[type="checkbox"]').is(':checked'));
+            if (row.find('input[type="checkbox"]').is(':checked')) {
+                var ids = row.attr('data-id')
+                //console.log("THis is Ids",ids);
+                if(!ids){
+                  console.log("rejected")
+                }else{
+                  selected_rows.push(row.attr('data-id'));
+                }
+                };
+            });
+            var selected_rows = JSON.stringify(selected_rows);
+            $.ajax({
+                url: "/search/searchResult/",
+                type: 'POST',
+                data: {'test_list_ids': selected_rows,'csrfmiddlewaretoken': $("[name=csrfmiddlewaretoken]").val()},
+                success: function(html){
+                    location.reload();
+                    $(':checkbox:checked').prop('checked',false);
+                }
+            })
+        });
+</script>
+
+{% endblock %}

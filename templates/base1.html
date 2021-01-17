@@ -1,0 +1,47 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Innovation Discovery - {% block title %}Index{% endblock %}</title>
+	{% load static %}
+	<link rel="icon" type="image/png" href="{% static 'logo.png' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'base_style.css' %}">
+	{% block custom_css %}{% endblock %}
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+	<script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>	
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+	<div class="navigationBar">
+		<div class="navbarItem"><a href="{% url 'index' %}">HOME</a></div>
+		<div class="navbarItem"><a href="{% url 'searchBar' %}">SEARCH BAR</a></div>
+		<div class="navbarItem"><a href="{% url 'accounts:view_settings' %}">CRAWLER SETTINGS</a></div>
+		<div class="navbarItem"><a href="{% url 'scheduler:scheduler_settings' %}">SCHEDULER SETTINGS</a></div>
+		<div class="navbarItem"><a href="{% url 'admin:index' %}">ADMIN PANEL</a></div>
+		<div class="navbarItem"><a href="{% url 'accounts:user_logout' %}">LOGOUT</a></div>
+		<div class="navbarItem"><a href="#"></a></div>
+	
+	</div>
+	
+
+	<div class="content content-1">
+		<div class="inner-content">
+			{% block content %}
+			{% endblock %}
+		</div>
+	</div>
+	<div id="loading" style="display:none;">
+	  <img id="loading-image" src="http://{{ request.get_host }}/static/ajax-loader.gif" alt="Loading..." />
+	</div>
+	{% block jquery %}
+	{% endblock %}
+	{% block custom_js %}
+	<script>
+		$(document).ready(function() {
+		   $('#loading').hide();
+		});
+	</script>
+	{% endblock %}
+</body>
+</html>

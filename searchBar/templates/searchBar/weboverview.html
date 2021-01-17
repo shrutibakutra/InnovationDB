@@ -1,0 +1,298 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block custom_css %}
+<link rel="stylesheet" type="text/css" href="{% static 'results_style.css' %}">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
+{% endblock %}
+
+{% block custom_js %}
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+{% endblock %}
+{% block content %}
+
+    <div class="resultFunction">
+      <div class="result-hd-box">
+        <label id="savedDataLbl" class="result-heading">Overview of {{ keywordSearch.keyWord }} results</label>
+    </div>
+      <div class="resultFunction col-3">
+        <div class="gutter_space">
+          <div class="opendelete-btns btn-group">
+            <button style="cursor:pointer;color: lightgray;" class="open-btn downloadLocally_stop" id="downloadLocally">DOWNLOAD LOCALLY</button>
+            <div class="dropdown" style="cursor:pointer;margin-right:10px;">
+
+            <img class="filt-btn" src="/static/filter.svg" alt="filter">
+
+              <div class="dropdown-content" style="left: -99px">
+<!--                <form action="" method="get">-->
+                  <button type="submit">All</button>
+<!--                </form>-->
+<!--                <form action="#" method="get">-->
+                  <button type="submit">File 1</button>
+<!--                </form><form action="#" method="get">-->
+                  <button type="submit">File 2</button>
+<!--              </form>-->
+              </div>
+            </div>
+          </div>
+          <div class="border folder-title" >Folder</div>
+          <ul class="main_wrapper border folder">
+            <li>
+              <button class="accordion">
+                <span class="plus-ic"></span>
+                <img class="folder-icon" src="/static/folder.svg" alt="filter"> Title
+              </button>
+              <!-- <ul class="main_wrapper folder">
+                <li>
+                  <button class="accordion">
+                    <span class="plus-ic"></span>
+                    <img class="folder-icon" src="/static/folder.svg" alt="filter"> Link Of The File
+                  </button>
+                </li>
+              </ul>
+            </li>
+            <li>
+              <button class="accordion">
+                <span class="plus-ic"></span>
+                <img class="folder-icon" src="/static/folder.svg" alt="filter"> Title
+              </button>
+
+            </li>
+            <li>
+              <button class="accordion">
+                <span class="plus-ic"></span>
+                <img class="folder-icon" src="/static/folder.svg" alt="filter"> Title
+              </button>
+
+            </li>
+          </ul> -->
+        </div>
+      </div>
+    </div> 
+    <div class="row {{keywordSearch.filter}}">
+      <div class="resultFunction col-9">
+        <div class="gutter_space">
+          <div class="opendelete-btns btn-group">
+            <button  style="cursor:pointer" class="delete-btn openLink" id="open">OPEN</button>
+            <button  style="cursor:pointer" class="open-btn" id="exportCSV"  >EXPORT CSV</button>
+            <button style="cursor:pointer" class="open-btn downloadLocally" id="downloadLocally">DOWNLOAD LOCALLY</button>
+            <button  style="cursor:pointer; color: lightgray;" class="delete-btn" id="downloadServer_stop">DOWNLOAD ON SERVER</button>
+            
+          <div class="dropdown" style="cursor:pointer;margin-right:10px;">
+
+            <img class="filt-btn" src="/static/filter.svg" alt="filter">
+
+              <div class="dropdown-content">
+                <form action="" method="get">
+                  <button type="submit">All</button>
+                </form>
+                <form action="#" method="get">
+                  <button type="submit">Journalistic tex</button>
+                </form><form action="#" method="get">
+                  <button type="submit">Scientific text</button>
+              </div>
+            </div>
+          </div>
+          <table id="example" class="display" style="width:100%">
+              <thead >
+                <tr>
+                    <th width="6%" style="width:13px;"><input type="checkbox" style="cursor:pointer;margin:0 !important;" id="anchor-from"/></th>
+                    <th style="width: 120px;">id</th>
+                    <th width="30%" class="text-left" style="width: 200px;">Title</th>
+                    <th width="30%" style="width: 200px;">URL</th>
+                    <th width="40%" style="width: 200px;">Description</th>
+                    <th width="40%" style="width: 120px;">Type</th>
+                    <th width="40%" style="width: 120px;">Extension</th>
+                    <th width="40%" style="width: 120px;">Type of TEXT</th>
+                    <th width="40%" style="width: 120px;">METADATA </th>
+                    <th width="40%" style="width: 120px;">Similarity(%)</th>
+                  </tr>
+                </thead >
+              <tbody>
+                {% for i in result %}
+                  <tr data-id="{{ i.id }}">
+                  <td style="background-color: #fff !important;"> <input type="checkbox" style="cursor:pointer;margin:0 !important;" class="checkall"/> </td>
+                      <td style="background-color: #fff !important;">{{i.id}}</td>
+                  <td style="background-color: #fff !important;" class="text-left">{{i.title}}</td>
+                  <td style="background-color: #fff !important;"><p class="link-url"><a href={{i.url}} target="_blank">{{i.url}}</a></p></td>
+                  <td style="background-color: #fff !important;">{{i.description}}</td>
+                  <td style="background-color: #fff !important;">{{keywordSearch.filter}}</td>
+                  <td style="background-color: #fff !important;">{{i.url_extension}}</td>
+                  <td style="background-color: #fff !important;">{{i.type_of_text}}</td>
+                  <td style="background-color: #fff !important;"></td>
+                  <td style="background-color: #fff !important;">{{keywordSearch.spin}}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+          </table>
+        </div>
+      </div>
+
+    {% csrf_token %}
+    <input type="hidden" id="innovationId"  name="innovation_id" value="{{ keywordSearch.id }}"> 
+    </div>
+
+
+
+<script>
+    $(document).ready(function() {
+        $('#example').DataTable({
+            "lengthMenu": [[10, 25, 50, 100, 500, 1000, -1], [10, 25, 50, 100, 500, 1000, "All"]],
+             "order": [[ 1, 'desc' ]],
+            "columnDefs": [{
+                "targets": [ 1 ],
+                "visible": false,
+                "searchable": false
+            },{
+                "targets": [0], //first column / numbering column
+                "orderable": false, //set not orderable
+            }]
+        });
+    } );
+</script>
+
+<script>
+    $("#exportCSV").click(function(){
+  
+      var selected_rows=[];
+        
+      $('.display').find('tr').each(function(){
+        var row=$(this);
+        if (row.find('input[type="checkbox"]').is(':checked')) {
+          var ids = row.attr('data-id')
+          if(ids){selected_rows.push(ids);}
+        }
+      });
+      
+      var selected_row = JSON.stringify(selected_rows)
+      console.log('row',selected_row)
+      $.ajax({
+          url: "/search/ExportCsvView/",
+          type: 'POST',
+          data: {'search_id': selected_row, filename : '{{ keywordSearch.keyWord }}', 'csrfmiddlewaretoken': $("[name=csrfmiddlewaretoken]").val()},
+          success: function(data){
+            var fileName  = data.fileName
+            var encodedUri = "/" + data.filePath;
+            var link = document.createElement("a");
+            console.log('gsjd',link)
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", fileName);
+            document.body.appendChild(link);
+            link.click();
+          }
+      })
+    });
+</script>
+
+<script>
+  $("#downloadServer").click(function(){
+
+    var selected_rows=[];
+   
+
+      
+    $('.display').find('tr').each(function(){
+      var row=$(this);
+      if (row.find('input[type="checkbox"]').is(':checked')) {
+        var ids = row.attr('data-id')
+        if(ids){selected_rows.push(ids);}
+      }
+    });
+    
+    var selected_row = JSON.stringify(selected_rows)
+    $.ajax({
+        url: "/search/DownloadServerView/",
+        type: 'POST',
+        data: {'search_id': selected_row,'csrfmiddlewaretoken': $("[name=csrfmiddlewaretoken]").val()},
+        success: function(data){
+          var fileName  = data.fileName
+          var encodedUri = "/" + data.filePath;
+          var link = document.createElement("a");
+          link.setAttribute("href", encodedUri);
+          link.setAttribute("download", fileName);
+          document.body.appendChild(link);
+          link.click();
+        }
+    })
+  });
+</script>
+
+
+<script>
+    $(".openLink").click(function(){
+      var selected_rows=[];
+
+          $('.display').find('tr').each(function(){
+            var row=$(this);
+            if (row.find('input[type="checkbox"]').is(':checked')) {
+                var ids = row.attr('data-id');
+                if(ids){
+                    var link = row.find('.link-url').find('a').attr('href');
+                    window.open(
+                      link,
+                      '_blank' // <- This is what makes it open in a new window.
+                    );
+                }
+            };
+        });
+    });
+    function getfilename(path){
+        path = path.substring(path.lastIndexOf("/")+ 1);
+        return (path.match(/[^.]+(\.[^?#]+)?/) || [])[0];
+    }
+  $(".downloadLocally").click(function(){
+    var selected_rows=[];
+
+    $('.display').find('tr').each(function(){
+      var row=$(this);
+      if (row.find('input[type="checkbox"]').is(':checked')) {
+        var ids = row.attr('data-id')
+        if(ids){
+            var linkUrls = row.find('.link-url').find('a').attr('href');
+            var fileName = getfilename(linkUrls);
+    <!--        extension = fileName.substr( (fileName.lastIndexOf('.') +1) );-->
+            if(linkUrls && fileName.indexOf('.') !== -1){
+    <!--            fileName = row.find('.text-left').text()+"."+extension;-->
+                $.ajax({
+                    url: "/search/DownloadFile/",
+                    type: 'POST',
+                    data: {'linkUrls': linkUrls,'fileName':fileName,'csrfmiddlewaretoken': $("[name=csrfmiddlewaretoken]").val()},
+                    success: function(data){
+                      var fileName  = data.fileName
+                      var encodedUri = "/" + data.filePath;
+                      var link = document.createElement("a");
+                      link.setAttribute("href", encodedUri);
+                      link.setAttribute("download", fileName);
+                      document.body.appendChild(link);
+                      link.click();
+                    }
+                })
+            }
+        }
+      }
+    });
+
+});
+</script>
+
+<script>
+    $("#anchor-from").change(function(){
+                if($('#anchor-from').is(':checked'))
+                {
+                  $(".checkall").attr("disabled", false);
+                  $(".checkall").prop("checked", true);
+
+                }
+                else
+                {
+                $(".checkall").attr("disabled", false);
+                 $(".checkall").prop("checked", false);
+                }
+            });
+    $(".checkall").change(function(){
+         $("#anchor-from").attr("disabled", false);
+         $("#anchor-from").prop("checked", false);
+    });
+</script>
+
+{% endblock %}
+

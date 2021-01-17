@@ -1,0 +1,280 @@
+{% extends 'base.html' %}
+{% load static %}
+ {% block custom_css %}<link rel="stylesheet" type="text/css" href="{% static 'searchbar_stye.css' %}">{% endblock %}
+{% block content %}
+    <div class="searchFunction">
+        <form action="/search/searchBar/" method="post">
+            <input type="hidden" id = "csrf_token" name="csrfmiddlewaretoken" value="isXFHorKb7qAkgwb0sOG2c2oxsSFzJnHkup3TKIAxRIAFNPGJdmVgZh7XmVEORFD">
+            {% csrf_token %}
+           <div class="row">
+            <a href="{{i.url}}/search/searchResult" class="btn" style="text-transform: uppercase;">All Results</a><br>
+        </div>
+        <div class="row " style="justify-content: flex-end;">
+
+            <div class="col-md-6 search-input-box" style="display: flex;text-align: left;flex-direction:column">
+                <div>
+<!--                    <div class="innovation-text" style="padding-top: 20px; ">-->
+<!--                        <label for="your_name" style="margin-right: 20px;">Innovation Search: </label>-->
+<!--                    </div>-->
+                    <div class="display-flex">
+                        <div class="d-flex" style="width: 64%;">
+                            <input type="hidden" id = "count" value="1" name="count">
+                            <label class="lab" style="text-align: left; text-transform: uppercase;" for="Search_Anything" >Title</label>
+                            <div style="position: relative;" id="textboxDiv" ><i style="position: absolute;left: -20px;top: 5px;" id="Add" class="fas fa-plus"></i><input height="500px" width="90%" id="search" type="text" name="Search_Anything" value="" placeholder="insert a keyword..." style="
+                            margin-right: 30px; width: 80%; " required></div>
+                        </div>
+                        <!-- <div class="d-flex" style="width: 34%;">
+                            <label for="spin" style="text-align: left; text-transform: uppercase;">SIMILARITY</label>
+                            <input height="500px" width="50%" name="spin" id="spin" role="spinbutton" aria-valuemax="100" aria-valuemin="0" aria-valuenow="25" type="number" min="00" max="100" value="80" style="
+                            margin-right: 30px;">
+                            <input height="500px" width="50%" name="spin" id="spin"  aria-valuemax="100"  aria-valuemin="0" aria-valuenow="25" type="number" min="10" max="100" value="80"  style="margin-right: 30px;">
+                        </div> -->
+
+                        {% comment %} <input type= "hidden" id = "csrf_token" name= "csrf_token" value = '{% csrf_token %}'> {% endcomment %}
+                    </div>
+                </div>
+                <div style="margin-top: 18px;" >
+
+                <div class="textarea-box">
+
+<!--                    <div class="innovation-text"></div>-->
+
+                    <div style="width: 100%;">
+                        <div style="display: block;margin-bottom: 8px;text-transform: uppercase;"><label>Reference text</label></div>
+                        <textarea id= "display" name="Desc_Search" placeholder="insert a reference text for compare results..." ></textarea>
+                    </div>
+
+                </div>
+                    <div class="searchload-btns">
+                        <button name="load" class="load_btn" style="display: none;">LOAD</button>
+                    </div>
+                    <div class="clearfix"></div>
+
+
+            </div>
+            </div>
+            <div class="col-md-2" >
+                <div style="display: block;text-transform: uppercase;"><label>Type</label></div>
+                <div class="type-content">
+                    <div>
+                        <input style="cursor: pointer" type="checkbox" id="type" name="type" value="Website">
+                        <label for="type3"> Websites </label>    
+                    </div>
+                    <div>
+                        <input style="cursor: pointer" type="checkbox" id="type"  name="type" value="Document">
+                        <label for="type3"> Documents </label>
+
+                    </div>
+                   <div>
+                       <input style="cursor: pointer" type="checkbox" name="type" id="type"  value="Image" disabled>
+                        <label  for="type3" style="color: lightgray;"> Images</label>
+                   </div>
+                    <div>
+                        <input style="cursor: pointer" type="checkbox" id="type"  name="type" value="Video" disabled>
+                        <label for="type3" style="color: lightgray;"> Videos</label>
+                    </div>
+                    <div>
+                        <input style="cursor: pointer" type="checkbox" id="type"  name="type" value="Social Posts" disabled>
+                        <label for="type3" style="color: lightgray;"> Social Posts</label>
+                    </div>
+                    <div>
+                       <input style="cursor: pointer" type="checkbox" id="type"  name="type" value="Professionals" disabled>
+                        <label for="type3" style="color: lightgray;"> Professionals</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="search-btn col-md-1">
+                 <button style="cursor: pointer" id="searchbtn" name="search">SEARCH</button>
+            </div>
+        </div>
+            <div class="row" style="flex-direction: column;">
+                <div style="display: block;text-transform: uppercase;padding:15px 0 0;"><label>Category</label></div>
+                {% for level0 in category_result %}
+                    {% if level0.parent_id is null %}
+                <div class="categories-content {{level0.name}}">
+                    <div class="tree-title level0"><input  type="checkbox" class="level lvl_0" lvl="0" id="check" name="category" value="{{level0.name}}" style="cursor: pointer" onclick='handleClick("{{level0.name.split|join:"_"}}", 1);'><label class="tree-lable" >{{level0.name}}</label></div>
+                    <div class="categories-list">
+                        <div class="tree-maincontent row">
+                            {% for level1 in level0.children.all %}
+                            <div class="categories-title col-md-4 ">
+                                <div class="categories-subtitle level1">
+                                   {%if level1.name == "COMPANIES-STARTUPS" %}
+                                    <input  type="checkbox" class="level lvl_1"  lvl="1" id="check" name="category" value="{{level1.name}}" style="cursor: pointer" onclick='handleClick("{{level1.name.split|join:"_"}}", 2);' ><label class="tree-lable">COMPANIES / STARTUPS</label></div>
+
+                                    {% else %}
+                                    <input disabled  type="checkbox" class="level lvl_1"  lvl="1" id="check" name="category" value="{{level1.name}}" style="cursor: pointer"><label class="tree-lable">{{level1.name}}</label></div>
+                                    {% endif  %}
+                                    <div class="tree-content">
+                                    <div class="level_1">
+                                        <ul>
+                                            {% if level1.parent_id is level0.id %}
+                                            {% for level2 in level1.children.all %}
+                                            <li>
+                                                <div class="level2 checkbox-flex {{level1.name.split|join:'_'}}">
+                                                {%if level2.name == "Manufacturers and Vendors" %}
+                                                <input disabled type="checkbox" class="lev el lvl_2"  lvl="2" name="category" id="category" value="{{level2.name}}" style="cursor: pointer" onclick='handleClick("{{level2.name.split|join:"_"}}", 3);'><label style="color: lightgray;">{{level2.name}}</label></div>
+                                                {%elif level2.name == "Affiliate and Merchants" %}
+                                                <input disabled type="checkbox" class="lev el lvl_2"  lvl="2" name="category" id="category" value="{{level2.name}}" style="cursor: pointer" onclick='handleClick("{{level2.name.split|join:"_"}}", 3);'><label style="color: lightgray;">{{level2.name}}</label></div>
+                                                {%elif level2.name == "Importers and exporters" %}
+                                                <input disabled type="checkbox" class="lev el lvl_2"  lvl="2" name="category" id="category" value="{{level2.name}}" style="cursor: pointer" onclick='handleClick("{{level2.name.split|join:"_"}}", 3);'><label style="color: lightgray;">{{level2.name}}</label></div>
+                                                {%elif level2.name == "Wholesalers and Distributors" %}
+                                                <input disabled type="checkbox" class="lev el lvl_2"  lvl="2" name="category" id="category" value="{{level2.name}}" style="cursor: pointer" onclick='handleClick("{{level2.name.split|join:"_"}}", 3);'><label style="color: lightgray;">{{level2.name}}</label></div>
+                                                {%elif level2.name == "Franchisors" %}
+                                                <input disabled type="checkbox" class="lev el lvl_2"  lvl="2" name="category" value="{{level2.name}}" style="cursor: pointer" onclick='handleClick("{{level2.name.split|join:"_"}}", 3);'><label style="color: lightgray;">{{level2.name}}</label></div>
+                                                {%elif level2.name == "Dropshippers" %}
+                                                <input disabled type="checkbox" class="lev el lvl_2"  lvl="2" name="category" id="category" value="{{level2.name}}" style="cursor: pointer" onclick='handleClick("{{level2.name.split|join:"_"}}", 3);'><label style="color: lightgray;">{{level2.name}}</label></div>
+                                                
+                                                {% else %}
+                                                <input disabled type="checkbox" class="level lvl_2"  lvl="2" name="category"  id="category" value="{{level2.name}}" style="cursor: pointer" onclick='handleClick("{{level2.name.split|join:"_"}}", 3);'><label style="color: lightgray;">{{level2.name}}</label></div>
+                                                {% endif  %}
+                                                <ul>
+                                                    {% if level1.parent_id is level0.id %}
+                                                    {% for level3 in level2.children.all %}
+                                                    <li>
+                                                        <div class="level3 checkbox-flex {{level2.name.split|join:'_'}}"><input disabled type="checkbox" class="level lvl_3" lvl="3" name="category"  id="category" value="{{level3.name}}" style="cursor: pointer" onclick='handleClick("{{level3.name.split|join:"_"}}", 4);'><label style="color: lightgray;">{{level3.name}}</label></div>
+                                                        <ul>
+                                                            <li>
+                                                                {% if level1.parent_id is level0.id %}
+                                                                {% for level4 in level3.children.all %}
+                                                                <div class="level4 checkbox-flex {{level3.name.split|join:'_'}}" ><input disabled  type="checkbox" class="level lvl_4" lvl="4" name="category" id="category" value="{{level4.id}}" style="cursor: pointer" onclick='handleClick("{{level4.name.split|join:"_"}}", 5);'><label style="color: lightgray;">{{level4.name}}</label></div>
+                                                                {% endfor %}
+                                                                {% endif %}
+                                                            </li>
+                                                        </ul>
+                                                    </li>
+                                                    {% endfor %}
+                                                    {% endif %}
+                                                </ul>
+                                            </li>
+                                            {% endfor %}
+                                            {% endif %}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                 {% endif %}
+            {% endfor %}
+            </div>
+
+
+        </form>
+	</div>
+
+    <script>
+    function handleClick(div,number) {
+        for (var i = number; i <= 4; i++) {
+            if($('.'+div+' .lvl_'+i+':input[type=checkbox]').prop("checked") == true){
+                $('.'+div+' .lvl_'+i+':input[type=checkbox]').prop('checked',false);
+            } else {
+                $('.'+div+' .lvl_'+i+':input[type=checkbox]').prop('checked',true);
+                }
+                }
+            }
+            $(document).ready(function() {
+
+               //On pressing a key on "Search box" in "search.php" file. This function will be called.
+               $("#search").keyup(function() {
+                    $('#display').empty();
+                   //Assigning search box value to javascript variable named as "name".
+                   var name = $('#search').val();
+                   var csrf_tocken = $('#csrf_token').val();
+                   //Validating, if "name" is empty.
+                     
+                   if (name == "") {
+                       //Assigning empty value to "display" div in "search.php" file.
+                       $("#display").html("");
+                   }
+                   //If name is not empty.
+                   else {
+                       //AJAX is called.
+                       $.ajax({
+                           //AJAX type is "Post".
+                           type: "get",
+                           //Data will be sent to "ajax.php".
+                           url: "/result/",
+                           //Data, that will be sent to "ajax.php".
+                           data: {
+                               //Assigning value of "name" into "search" variable.
+                               search: name,
+                               csrfmiddlewaretoken: '{{ csrf_token }}'                               
+                           },
+
+                           //If result found, this funtion will be called.
+                           success: function(res) {
+
+                                res = JSON.parse(JSON.stringify(res));
+                               //Assigning result to "display" div
+                                var html_data = "";
+                                for (var i=0; i < res.models_to_return.length; i++) {
+                                    html_data +="Match: "+res.models_to_return[i].title+ "\n";
+                                }
+                               $("#display").html(html_data).show();
+                           }
+                       });
+                   }
+               });
+            });
+    </script>
+    <script>
+        $("#spin").keypress(function (e) {
+            e.preventDefault();
+        }).keydown(function(e){
+            if ( e.keyCode === 8 || e.keyCode === 46 ) {
+                return false;
+            }
+        });
+    </script>
+    <script> 
+        $(function() { 
+            // attr() method applied here 
+            $("#searchbtn").prop('disabled', true); 
+        }); 
+    </script> 
+    <script>
+        $(function() {
+            $('.level').click(function() {
+                if ($(this).is(':checked')) {
+                    $('#searchbtn').removeAttr('disabled');
+                } else {
+                    $('#searchbtn').attr('disabled', 'disabled');
+                }
+            });
+        });
+    </script>
+
+<script>
+    jQuery(document).ready( function () {
+        
+
+    jQuery(document).on('click', '#Add', function() {
+        var count=parseInt($('#count').val()); 
+        if (count <=  9) {
+            if (count == 9 ){ 
+                $("#textboxDiv").append('<div style="position: relative; margin-top: 10px;" id="textboxDiv"><i style="position: absolute;left: -20px;top: 5px;" id="Remove" class="fas fa-times"></i><input height="500px" id="search" type="text" name="Search_Anything" value="" placeholder="insert a keyword..." style="margin-right: 30px; width: 80%;  " required /><input type="hidden" id = "count" value="1" name="count"></div>');
+            }else{  
+                
+                $("#textboxDiv").append('<div style="position: relative; margin-top: 10px;" id="textboxDiv"><i style="position: absolute;left: -20px;top: 5px;" id="Remove" class="fas fa-times"></i><input height="500px" id="search" type="text" name="Search_Anything" value="" placeholder="insert a keyword..." style="margin-right: 30px; width: 80%;  " required /></div>');
+                
+            }
+            $('#count').val(count+1);
+            return false;
+        }
+        });    
+
+    jQuery(document).on('click', '#Remove', function() {
+        var count=parseInt($('#count').val());
+        $('#count').val(count-1);
+        jQuery(this).parent().remove();
+        return false;
+        });          
+    })
+</script>    
+    
+{% endblock %}                              
+

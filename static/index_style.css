@@ -1,0 +1,40 @@
+.availableFunctions{
+	width: 100%;
+	height: 300px;
+	display: flex;
+	justify-content: space-around;
+	flex-wrap: wrap;
+}
+
+.functionBox{
+	width: 400px;
+	height: 100%;
+	background-color: black;
+	margin-bottom: 2em;
+	border: 1px solid rgba(0, 0, 0, 0.7);
+}
+
+.functionCoverImage{
+	height: 70%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-position: center;
+	background-size: cover;
+	background-repeat: no-repeat;
+}
+
+.functionCoverImage h3{
+	position: absolute;
+	z-index: 1;
+	color: white;
+	text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+	font-size: 20px;
+	transition: 0.3s all ease-in-out;
+}
+
+.functionDescription{
+	background-color:rgba(255, 255, 255, 0.9);
+	height: 30%;
+	padding: 5px;
+} 
